@@ -14,9 +14,10 @@ export default function App() {
   return (
     <View style={styles.container}>
       <FlatList
-        contentContainerStyle={{ padding: 10 }}
+        contentContainerStyle={styles.list}
         data={cocktails}
         keyExtractor={(item) => item.idDrink}
+        numColumns={3}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Image style={styles.image} source={{ uri: item.strDrinkThumb }} />
@@ -31,23 +32,28 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 22,
     backgroundColor: "#fff",
   },
+  list: {
+    justifyContent: "center",
+    flexDirection: "column",
+  },
   item: {
-    flexDirection: "row",
-    marginBottom: 20,
-    padding: 10,
-    backgroundColor: "#f8f8f8",
-    borderRadius: 5,
+    flex: 1,
+    flexDirection: "column",
+    margin: 10,
     alignItems: "center",
+    justifyContent: "center",
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 10,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 5,
   },
 });
