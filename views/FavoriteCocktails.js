@@ -1,22 +1,28 @@
+// FavoriteCocktails.js
 import React, { useEffect, useState } from "react";
 import {
+  View,
+  Text,
+  StyleSheet,
   FlatList,
   Image,
-  StyleSheet,
-  Text,
-  View,
   TouchableOpacity,
 } from "react-native";
-import { getCocktails } from "../api/api";
-import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function HomePage() {
-  const [cocktails, setCocktails] = useState([]);
-  const navigation = useNavigation();
+export default function FavoriteCocktails() {
   const [favorites, setFavorites] = useState([]);
+  const navigation = useNavigation();
 
+  const removeFromFavorites = async (idDrink) => {
+    let favorites = await AsyncStorage.getItem("favorites");
+    favorites = favorites ? JSON.parse(favorites) : [];
+    favorites = favorites.filter((cocktail) => cocktail.idDrink !== idDrink);
+    await AsyncStorage.setItem("favorites", JSON.stringify(favorites));
+    setFavorites(favorites);
+  };
   useEffect(() => {
     const fetchFavorites = async () => {
       let favorites = await AsyncStorage.getItem("favorites");
@@ -27,36 +33,11 @@ export default function HomePage() {
     fetchFavorites();
   }, []);
 
-  useEffect(() => {
-    getCocktails().then((response) => {
-      setCocktails(response.data.drinks);
-    });
-  }, []);
-
-  const addToFavorites = async (cocktail) => {
-    let favorites = await AsyncStorage.getItem("favorites");
-    favorites = favorites ? JSON.parse(favorites) : [];
-    favorites.push(cocktail);
-    await AsyncStorage.setItem("favorites", JSON.stringify(favorites));
-    setFavorites(favorites);
-  };
-
-  const removeFromFavorites = async (idDrink) => {
-    let favorites = await AsyncStorage.getItem("favorites");
-    favorites = favorites ? JSON.parse(favorites) : [];
-    favorites = favorites.filter((cocktail) => cocktail.idDrink !== idDrink);
-    await AsyncStorage.setItem("favorites", JSON.stringify(favorites));
-    setFavorites(favorites);
-  };
-
-  const isFavorite = (idDrink) => {
-    return favorites.some((cocktail) => cocktail.idDrink === idDrink);
-  };
-
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Favorite Cocktails</Text>
       <FlatList
-        data={cocktails}
+        data={favorites}
         keyExtractor={(item) => item.idDrink}
         numColumns={3}
         renderItem={({ item }) => (
@@ -76,17 +57,9 @@ export default function HomePage() {
                 <Text style={styles.text}>{item.strDrink}</Text>
                 <TouchableOpacity
                   style={styles.favoriteButton}
-                  onPress={() =>
-                    isFavorite(item.idDrink)
-                      ? removeFromFavorites(item.idDrink)
-                      : addToFavorites(item)
-                  }
+                  onPress={() => removeFromFavorites(item.idDrink)}
                 >
-                  <AntDesign
-                    name={isFavorite(item.idDrink) ? "heart" : "hearto"}
-                    size={24}
-                    color="red"
-                  />
+                  <AntDesign name="heart" size={24} color="red" />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
@@ -101,6 +74,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    textAlign: "center",
+    margin: 10,
   },
   item: {
     flex: 1,
