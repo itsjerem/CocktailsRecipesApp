@@ -1,16 +1,16 @@
+// CocktailDetailsPage.js
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { getRandomCocktail, getCocktailDetails } from "../api/api";
+import { useRoute } from "@react-navigation/native";
+import { getCocktailDetails } from "../api/api";
 
-export default function RandomCocktailPage() {
+export default function CocktailDetailsPage() {
   const [cocktail, setCocktail] = useState(null);
+  const route = useRoute();
 
   useEffect(() => {
-    getRandomCocktail().then((response) => {
-      const cocktailId = response.data.drinks[0].idDrink;
-      getCocktailDetails(cocktailId).then((response) => {
-        setCocktail(response.data.drinks[0]);
-      });
+    getCocktailDetails(route.params.cocktailId).then((response) => {
+      setCocktail(response.data.drinks[0]);
     });
   }, []);
 
@@ -26,23 +26,20 @@ export default function RandomCocktailPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 50,
-    marginHorizontal: 20,
     alignItems: "center",
+    marginTop: 50,
   },
   title: {
     fontSize: 24,
     marginBottom: 10,
-    alignItems: "center",
-    fontWeight: "bold",
   },
   image: {
     width: 200,
     height: 200,
     borderRadius: 8,
-    marginBottom: 10,
   },
   instructions: {
     marginTop: 10,
+    textAlign: "center",
   },
 });

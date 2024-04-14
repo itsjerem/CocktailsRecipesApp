@@ -1,8 +1,9 @@
 import React from "react";
-import {  Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import RandomCocktailPage from "../views/RandomCocktailPage";
+import CocktailDetailsPage from "../views/CocktailDetailsPage";
 import HomePage from "../views/HomePage";
 
 const Stack = createStackNavigator();
@@ -38,6 +39,21 @@ function Navigation() {
               </TouchableOpacity>
             ),
           })}
+        />
+        <Stack.Screen
+          name="CocktailDetails"
+          component={CocktailDetailsPage}
+          options={{
+            title: "Cocktail Details",
+            headerStyle: {
+              backgroundColor: "#f4511e",
+            },
+            headerTintColor: "#fff",
+            headerTitleStyle: {
+              fontWeight: "bold",
+            },
+            headerTitleAlign: "left",
+          }}
         />
         <Stack.Screen
           name="RandomCocktail"
