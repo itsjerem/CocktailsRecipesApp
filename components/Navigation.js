@@ -6,6 +6,7 @@ import RandomCocktailPage from "../views/RandomCocktailPage";
 import CocktailDetailsPage from "../views/CocktailDetailsPage";
 import FavoriteCocktails from "../views/FavoriteCocktails";
 import HomePage from "../views/HomePage";
+import { AntDesign } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
@@ -30,14 +31,13 @@ function Navigation() {
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#fff",
                     borderRadius: 5,
                     padding: 7,
                     marginRight: 10,
                   }}
                   onPress={() => navigation.navigate("FavoriteCocktails")}
                 >
-                  <Text style={{ color: "#f4511e" }}>Favorite Cocktails</Text>
+                  <AntDesign name="hearto" size={24} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{

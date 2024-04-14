@@ -138,3 +138,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+//coucou step 6
