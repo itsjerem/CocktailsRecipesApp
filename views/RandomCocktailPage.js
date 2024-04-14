@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   randomButton: {
-    backgroundColor: "#f4511e",
+    backgroundColor: "tomato",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
