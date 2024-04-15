@@ -1,6 +1,13 @@
 // CocktailDetailsPage.js
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { getCocktailDetails } from "../api/api";
 import { AntDesign } from "@expo/vector-icons";
@@ -48,27 +55,45 @@ export default function CocktailDetailsPage() {
   };
 
   return cocktail ? (
-    <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: cocktail.strDrinkThumb }} />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{cocktail.strDrink}</Text>
-        <TouchableOpacity
-          style={styles.favoriteButton}
-          onPress={() =>
-            isFavorite(cocktail.idDrink)
-              ? removeFromFavorites(cocktail.idDrink)
-              : addToFavorites(cocktail)
-          }
-        >
-          <AntDesign
-            name={isFavorite(cocktail.idDrink) ? "heart" : "hearto"}
-            size={24}
-            color="red"
-          />
-        </TouchableOpacity>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image style={styles.image} source={{ uri: cocktail.strDrinkThumb }} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{cocktail.strDrink}</Text>
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={() =>
+              isFavorite(cocktail.idDrink)
+                ? removeFromFavorites(cocktail.idDrink)
+                : addToFavorites(cocktail)
+            }
+          >
+            <AntDesign
+              name={isFavorite(cocktail.idDrink) ? "heart" : "hearto"}
+              size={24}
+              color="red"
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.instructions}>{cocktail.strInstructions}</Text>
+
+        <View>
+          <Text style={styles.title}>Ingredients</Text>
+          {[...Array(15)].map((_, i) => {
+            const ingredient = cocktail[`strIngredient${i + 1}`];
+            const measure = cocktail[`strMeasure${i + 1}`];
+            if (ingredient && measure) {
+              return (
+                <Text key={i}>
+                  {ingredient} - {measure}
+                </Text>
+              );
+            }
+            return null;
+          })}
+        </View>
       </View>
-      <Text style={styles.instructions}>{cocktail.strInstructions}</Text>
-    </View>
+    </ScrollView>
   ) : null;
 }
 
@@ -80,6 +105,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
   image: {
@@ -88,7 +115,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   instructions: {
-    marginTop: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
     textAlign: "center",
   },
   titleContainer: {

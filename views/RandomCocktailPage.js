@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Button,
+  ScrollView,
 } from "react-native";
 import { getRandomCocktail, getCocktailDetails } from "../api/api";
 import { AntDesign } from "@expo/vector-icons";
@@ -66,33 +67,50 @@ export default function RandomCocktailPage() {
   }, []);
 
   return cocktail ? (
-    <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: cocktail.strDrinkThumb }} />
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{cocktail.strDrink}</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image style={styles.image} source={{ uri: cocktail.strDrinkThumb }} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{cocktail.strDrink}</Text>
+          <TouchableOpacity
+            style={styles.favoriteButton}
+            onPress={() =>
+              isFavorite(cocktail.idDrink)
+                ? removeFromFavorites(cocktail.idDrink)
+                : addToFavorites(cocktail)
+            }
+          >
+            <AntDesign
+              name={isFavorite(cocktail.idDrink) ? "heart" : "hearto"}
+              size={24}
+              color="red"
+            />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.instructions}>{cocktail.strInstructions}</Text>
+        <View>
+          <Text style={styles.title}>Ingredients</Text>
+          {[...Array(15)].map((_, i) => {
+            const ingredient = cocktail[`strIngredient${i + 1}`];
+            const measure = cocktail[`strMeasure${i + 1}`];
+            if (ingredient && measure) {
+              return (
+                <Text key={i}>
+                  {ingredient} - {measure}
+                </Text>
+              );
+            }
+            return null;
+          })}
+        </View>
         <TouchableOpacity
-          style={styles.favoriteButton}
-          onPress={() =>
-            isFavorite(cocktail.idDrink)
-              ? removeFromFavorites(cocktail.idDrink)
-              : addToFavorites(cocktail)
-          }
+          style={styles.randomButton}
+          onPress={fetchRandomCocktail}
         >
-          <AntDesign
-            name={isFavorite(cocktail.idDrink) ? "heart" : "hearto"}
-            size={24}
-            color="red"
-          />
+          <Text style={styles.randomButtonText}>🍹 Another one!</Text>
         </TouchableOpacity>
       </View>
-      <Text style={styles.instructions}>{cocktail.strInstructions}</Text>
-      <TouchableOpacity
-        style={styles.randomButton}
-        onPress={fetchRandomCocktail}
-      >
-        <Text style={styles.randomButtonText}>🍹 Another one!</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   ) : null;
 }
 
@@ -100,8 +118,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 50,
-    marginHorizontal: 20,
     alignItems: "center",
+    marginHorizontal: 20,
   },
   title: {
     fontSize: 24,
@@ -116,7 +134,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   instructions: {
-    marginTop: 10,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    textAlign: "center",
   },
   titleContainer: {
     flexDirection: "row",
